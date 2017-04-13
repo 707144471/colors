@@ -185,17 +185,51 @@
     [dictionary setObject:@"ae" forKey:@"ae"];
     [dictionary setObject:@"ae1" forKey:@"ae1"];
     [dictionary setObject:@"b" forKey:@"b"];
-    NSArray *keysArray = [dictionary allKeys];//获取所有键存到数组
+    
+    
+    
+    NSString *string=[self TheKeyValueSequence:dictionary];
+    NSLog(@"%@",string);
+    
+//    NSArray *keysArray = [dictionary allKeys];//获取所有键存到数组
+//    NSArray *sortedArray = [keysArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
+//        return [obj1 compare:obj2 options:NSNumericSearch];
+//    }];//由于allKeys返回的是无序数组，这里我们要排列它们的顺序
+//    for (NSString *key in sortedArray) {
+//        NSString *value = [dictionary objectForKey: key];
+//        NSLog(@"排列的值:%@",value);
+//    }
+//    
+    
+    // Do any additional setup after loading the view, typically from a nib.
+}
+#pragma mark - 键值对排序
+-(NSString *)TheKeyValueSequence:(NSDictionary *)dic{
+    
+    NSArray *keysArray = [dic allKeys];//获取所有键存到数组
     NSArray *sortedArray = [keysArray sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
         return [obj1 compare:obj2 options:NSNumericSearch];
     }];//由于allKeys返回的是无序数组，这里我们要排列它们的顺序
+    NSMutableArray *keysNameArray=[NSMutableArray arrayWithCapacity:0];
     for (NSString *key in sortedArray) {
-        NSString *value = [dictionary objectForKey: key];
-        NSLog(@"排列的值:%@",value);
+        // NSString *value = [dic objectForKey: key];
+        [keysNameArray addObject:key];
+        // NSLog(@"排列的值:%@",value);
+    }
+    
+    NSString *url;
+    for (int i=0; i<keysNameArray.count; i++) {
+        NSString *keys=keysNameArray[i];
+        
+        if (i==0) {
+            url=[NSString stringWithFormat:@"%@=%@",keys,[dic objectForKey:keys]];
+        }else{
+            url=[NSString stringWithFormat:@"%@&%@=%@",url,keys,[dic objectForKey:keys]];
+        }
     }
     
     
-    // Do any additional setup after loading the view, typically from a nib.
+    return url;
 }
 //颜色值
 -(UIColor *)colorWithHexString:(NSString *)color{
